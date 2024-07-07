@@ -5,6 +5,7 @@ import meteor.plugin.debug.DebugPlugin
 import meteor.plugin.overlayhelper.OverlayHelperPlugin
 import meteor.plugin.rendering.RenderingPlugin
 import meteor.plugin.stretchedmode.StretchedModePlugin
+import meteor.plugin.customsprites.CustomSpritesPlugin
 
 object PluginManager {
     val plugins = mutableListOf<Plugin>()
@@ -15,6 +16,7 @@ object PluginManager {
         plugins.add(OverlayHelperPlugin())
         plugins.add(RenderingPlugin())
         plugins.add(StretchedModePlugin())
+        plugins.add(CustomSpritesPlugin())
     }
 
     fun startPlugins() {

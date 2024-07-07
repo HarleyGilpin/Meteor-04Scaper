@@ -34,8 +34,8 @@ import java.awt.Point
  * This overlay is restricted to the viewport area
  */
 object ViewportOverlayRoot {
-    val VIEWPORT_DIMENSIONS = Dimension(512, 334)
-    val VIEWPORT_OFFSETS = Point(8, 11)
+    val VIEWPORT_DIMENSIONS = Dimension(516, 337)
+    val VIEWPORT_OFFSETS = Point(5, 8)
     var yScale: Float? = null
     var xScale: Float? = null
     val polygons = HashMap<List<Point>, Color>()

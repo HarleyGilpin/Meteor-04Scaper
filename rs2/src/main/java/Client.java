@@ -34,6 +34,8 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.zip.CRC32;
 
 @OriginalClass("client!client")
@@ -42,7 +44,7 @@ public class Client extends GameShell {
 	public static JPanel gamePanel;
 	public boolean showDebug = false;
 	public boolean showPerformance = false;
-    public boolean cameraEditor = false;
+	public boolean cameraEditor = false;
 
 	// alt+shift click to add a tile overlay
 	public Tile[] userTileMarkers = new Tile[4];
@@ -1654,7 +1656,7 @@ public class Client extends GameShell {
 				if (this.chatStyles[i] == 2) {
 					int w = this.fontBold12.stringWidth(message);
 					@Pc(913) int offsetX = (150 - this.chatTimers[i]) * (w + 100) / 150;
-					Draw2D.setBounds(334, this.projectX + 50, 0, this.projectX - 50);
+					Draw2D.setBounds(337, this.projectX + 50, 0, this.projectX - 50);
 					this.fontBold12.drawString(this.projectX + 50 - offsetX, this.projectY + 1, message, 0);
 					this.fontBold12.drawString(this.projectX + 50 - offsetX, this.projectY, message, color);
 					Draw2D.resetBounds();
@@ -2349,7 +2351,7 @@ public class Client extends GameShell {
 		this.drawTileHint();
 		this.updateTextures(jitter);
 		this.draw3DEntityElements();
-		this.areaViewport.draw(super.graphics, 8, 11);
+		this.areaViewport.draw(super.graphics, 5, 8);
 		this.cameraX = cameraX;
 		this.cameraY = cameraY;
 		this.cameraZ = cameraZ;
@@ -3138,35 +3140,35 @@ public class Client extends GameShell {
 							} else if (this.chatTyped.equals("::perf")) {
 								this.showPerformance = !this.showPerformance;
 							} else if (this.chatTyped.equals("::camera")) {
-                                this.cameraEditor = !this.cameraEditor;
-                                this.cutscene = this.cameraEditor;
-                                this.cutsceneDstLocalTileX = 52;
-                                this.cutsceneDstLocalTileZ = 52;
-                                this.cutsceneSrcLocalTileX = 52;
-                                this.cutsceneSrcLocalTileZ = 52;
-                                this.cutsceneSrcHeight = 1000;
-                                this.cutsceneDstHeight = 1000;
-                            } else if (this.chatTyped.startsWith("::camsrc ")) {
-                                String[] args = this.chatTyped.split(" ");
-                                if (args.length == 3) {
-                                    this.cutsceneSrcLocalTileX = Integer.parseInt(args[1]);
-                                    this.cutsceneSrcLocalTileZ = Integer.parseInt(args[2]);
-                                } else if (args.length == 4) {
-                                    this.cutsceneSrcLocalTileX = Integer.parseInt(args[1]);
-                                    this.cutsceneSrcLocalTileZ = Integer.parseInt(args[2]);
-                                    this.cutsceneSrcHeight = Integer.parseInt(args[3]);
-                                }
-                            } else if (this.chatTyped.startsWith("::camdst ")) {
-                                String[] args = this.chatTyped.split(" ");
-                                if (args.length == 3) {
-                                    this.cutsceneDstLocalTileX = Integer.parseInt(args[1]);
-                                    this.cutsceneDstLocalTileZ = Integer.parseInt(args[2]);
-                                } else if (args.length == 4) {
-                                    this.cutsceneDstLocalTileX = Integer.parseInt(args[1]);
-                                    this.cutsceneDstLocalTileZ = Integer.parseInt(args[2]);
-                                    this.cutsceneDstHeight = Integer.parseInt(args[3]);
-                                }
-                            }
+								this.cameraEditor = !this.cameraEditor;
+								this.cutscene = this.cameraEditor;
+								this.cutsceneDstLocalTileX = 52;
+								this.cutsceneDstLocalTileZ = 52;
+								this.cutsceneSrcLocalTileX = 52;
+								this.cutsceneSrcLocalTileZ = 52;
+								this.cutsceneSrcHeight = 1000;
+								this.cutsceneDstHeight = 1000;
+							} else if (this.chatTyped.startsWith("::camsrc ")) {
+								String[] args = this.chatTyped.split(" ");
+								if (args.length == 3) {
+									this.cutsceneSrcLocalTileX = Integer.parseInt(args[1]);
+									this.cutsceneSrcLocalTileZ = Integer.parseInt(args[2]);
+								} else if (args.length == 4) {
+									this.cutsceneSrcLocalTileX = Integer.parseInt(args[1]);
+									this.cutsceneSrcLocalTileZ = Integer.parseInt(args[2]);
+									this.cutsceneSrcHeight = Integer.parseInt(args[3]);
+								}
+							} else if (this.chatTyped.startsWith("::camdst ")) {
+								String[] args = this.chatTyped.split(" ");
+								if (args.length == 3) {
+									this.cutsceneDstLocalTileX = Integer.parseInt(args[1]);
+									this.cutsceneDstLocalTileZ = Integer.parseInt(args[2]);
+								} else if (args.length == 4) {
+									this.cutsceneDstLocalTileX = Integer.parseInt(args[1]);
+									this.cutsceneDstLocalTileZ = Integer.parseInt(args[2]);
+									this.cutsceneDstHeight = Integer.parseInt(args[3]);
+								}
+							}
 							// }
 
 							if (this.chatTyped.startsWith("::")) {
@@ -4310,7 +4312,7 @@ public class Client extends GameShell {
 		Draw2D.clear();
 		this.imageMapback.draw(0, 0);
 		this.areaSidebar = new PixMap(this.getBaseComponent(), 190, 261);
-		this.areaViewport = new PixMap(this.getBaseComponent(), 512, 334);
+		this.areaViewport = new PixMap(this.getBaseComponent(), 516, 337);
 		Draw2D.clear();
 		this.areaBackbase1 = new PixMap(this.getBaseComponent(), 501, 61);
 		this.areaBackbase2 = new PixMap(this.getBaseComponent(), 288, 40);
@@ -4443,7 +4445,7 @@ public class Client extends GameShell {
 							int dy = 0;
 							int id = child.invSlotObjId[slot] - 1;
 
-							if (slotX >= -32 && slotX <= 512 && slotY >= -32 && slotY <= 334 || this.objDragArea != 0 && this.objDragSlot == slot) {
+							if (slotX >= -32 && slotX <= 516 && slotY >= -32 && slotY <= 337 || this.objDragArea != 0 && this.objDragSlot == slot) {
 								@Pc(251) Pix24 icon = ObjType.getIcon(id, child.invSlotObjCount[slot]);
 								if (this.objDragArea != 0 && this.objDragSlot == slot && this.objDragInterfaceId == child.id) {
 									dx = super.mouseX - this.objGrabX;
@@ -5118,7 +5120,7 @@ public class Client extends GameShell {
 			this.redrawSideicons = true;
 			this.redrawPrivacySettings = true;
 			if (this.sceneState != 2) {
-				this.areaViewport.draw(super.graphics, 8, 11);
+				this.areaViewport.draw(super.graphics, 5, 8);
 				this.areaMapback.draw(super.graphics, 561, 5);
 			}
 		}
@@ -5294,11 +5296,11 @@ public class Client extends GameShell {
 				}
 
 				if (this.tabInterfaceId[8] != -1 && (this.flashingTab != 8 || loopCycle % 20 < 10)) {
-					this.imageSideicons[7].draw(80, 2);
+					this.imageSideicons[7].draw(45, 2);
 				}
 
 				if (this.tabInterfaceId[9] != -1 && (this.flashingTab != 9 || loopCycle % 20 < 10)) {
-					this.imageSideicons[8].draw(107, 3);
+					this.imageSideicons[8].draw(85, 3);
 				}
 
 				if (this.tabInterfaceId[10] != -1 && (this.flashingTab != 10 || loopCycle % 20 < 10)) {
@@ -5326,43 +5328,73 @@ public class Client extends GameShell {
 			this.areaBackbase1.bind();
 			this.imageBackbase1.draw(0, 0);
 
-			this.fontPlain12.drawStringTaggableCenter("Public chat", 57, 33, 16777215, true);
+			// Public chat
+			String publicChatStatus;
+			int publicChatColor;
+
 			if (this.publicChatSetting == 0) {
-				this.fontPlain12.drawStringTaggableCenter("On", 57, 46, 65280, true);
-			}
-			if (this.publicChatSetting == 1) {
-				this.fontPlain12.drawStringTaggableCenter("Friends", 57, 46, 16776960, true);
-			}
-			if (this.publicChatSetting == 2) {
-				this.fontPlain12.drawStringTaggableCenter("Off", 57, 46, 16711680, true);
-			}
-			if (this.publicChatSetting == 3) {
-				this.fontPlain12.drawStringTaggableCenter("Hide", 57, 46, 65535, true);
+				publicChatStatus = "On";
+				publicChatColor = 65280; // Green
+			} else if (this.publicChatSetting == 1) {
+				publicChatStatus = "Friends";
+				publicChatColor = 16776960; // Yellow
+			} else if (this.publicChatSetting == 2) {
+				publicChatStatus = "Off";
+				publicChatColor = 16711680; // Red
+			} else if (this.publicChatSetting == 3) {
+				publicChatStatus = "Hide";
+				publicChatColor = 65535; // Cyan
+			} else {
+				publicChatStatus = "Unknown";
+				publicChatColor = 16777215; // White
 			}
 
-			this.fontPlain12.drawStringTaggableCenter("Private chat", 186, 33, 16777215, true);
+			this.fontPlain12.drawStringTaggableCenter("Public chat:", 47, 46, 16777215, true);
+			this.fontPlain12.drawStringTaggableCenter(publicChatStatus, 107, 46, publicChatColor, true);
+
+			// Private chat
+			String privateChatStatus;
+			int privateChatColor;
+
 			if (this.privateChatSetting == 0) {
-				this.fontPlain12.drawStringTaggableCenter("On", 186, 46, 65280, true);
-			}
-			if (this.privateChatSetting == 1) {
-				this.fontPlain12.drawStringTaggableCenter("Friends", 186, 46, 16776960, true);
-			}
-			if (this.privateChatSetting == 2) {
-				this.fontPlain12.drawStringTaggableCenter("Off", 186, 46, 16711680, true);
+				privateChatStatus = "On";
+				privateChatColor = 65280; // Green
+			} else if (this.privateChatSetting == 1) {
+				privateChatStatus = "Friends";
+				privateChatColor = 16776960; // Yellow
+			} else if (this.privateChatSetting == 2) {
+				privateChatStatus = "Off";
+				privateChatColor = 16711680; // Red
+			} else {
+				privateChatStatus = "Unknown";
+				privateChatColor = 16777215; // White
 			}
 
-			this.fontPlain12.drawStringTaggableCenter("Trade/duel", 326, 33, 16777215, true);
+			this.fontPlain12.drawStringTaggableCenter("Private chat:", 184, 46, 16777215, true);
+			this.fontPlain12.drawStringTaggableCenter(privateChatStatus, 242, 46, privateChatColor, true);
+
+			// Trade/duel chat
+			String tradeChatStatus;
+			int tradeChatColor;
+
 			if (this.tradeChatSetting == 0) {
-				this.fontPlain12.drawStringTaggableCenter("On", 326, 46, 65280, true);
-			}
-			if (this.tradeChatSetting == 1) {
-				this.fontPlain12.drawStringTaggableCenter("Friends", 326, 46, 16776960, true);
-			}
-			if (this.tradeChatSetting == 2) {
-				this.fontPlain12.drawStringTaggableCenter("Off", 326, 46, 16711680, true);
+				tradeChatStatus = "On";
+				tradeChatColor = 65280; // Green
+			} else if (this.tradeChatSetting == 1) {
+				tradeChatStatus = "Friends";
+				tradeChatColor = 16776960; // Yellow
+			} else if (this.tradeChatSetting == 2) {
+				tradeChatStatus = "Off";
+				tradeChatColor = 16711680; // Red
+			} else {
+				tradeChatStatus = "Unknown";
+				tradeChatColor = 16777215; // White
 			}
 
-			this.fontPlain12.drawStringTaggableCenter("Report abuse", 462, 38, 16777215, true);
+			this.fontPlain12.drawStringTaggableCenter("Trade/duel:", 316, 46, 16777215, true);
+			this.fontPlain12.drawStringTaggableCenter(tradeChatStatus, 376, 46, tradeChatColor, true);
+
+			this.fontPlain12.drawStringTaggableCenter("Report", 472, 46, 16777215, true);
 			this.areaBackbase1.draw(super.graphics, 0, 471);
 			this.areaViewport.bind();
 		}
@@ -6520,8 +6552,8 @@ public class Client extends GameShell {
 
 		started = true;
 
-		@Pc(34) boolean good = this.frame != null;
-		@Pc(38) String host = this.getHost();
+		boolean good = this.frame != null;
+		String host = this.getHost();
 		if (host.endsWith("2004scape.org")) {
 			// intended domain for players
 			good = true;
@@ -6540,24 +6572,24 @@ public class Client extends GameShell {
 		}
 
 		try {
-			@Pc(94) int retry = 5;
+			int retry = 5;
 			this.archiveChecksum[8] = 0;
 			while (this.archiveChecksum[8] == 0) {
 				this.drawProgress("Connecting to fileserver", 10);
 				try {
-					@Pc(119) DataInputStream stream = this.openUrl("crc" + (int) (Math.random() * 9.9999999E7D));
-					@Pc(126) Packet checksums = new Packet(new byte[36]);
+					DataInputStream stream = this.openUrl("crc" + (int) (Math.random() * 9.9999999E7D));
+					Packet checksums = new Packet(new byte[36]);
 					stream.readFully(checksums.data, 0, 36);
-					for (@Pc(134) int i = 0; i < 9; i++) {
+					for (int i = 0; i < 9; i++) {
 						this.archiveChecksum[i] = checksums.g4();
 					}
 					stream.close();
-				} catch (@Pc(150) IOException ex) {
-					for (@Pc(152) int i = retry; i > 0; i--) {
+				} catch (IOException ex) {
+					for (int i = retry; i > 0; i--) {
 						this.drawProgress("Error loading - Will retry in " + i + " secs.", 10);
 						try {
 							Thread.sleep(1000L);
-						} catch (@Pc(171) Exception ignored) {
+						} catch (Exception ignored) {
 						}
 					}
 					retry *= 2;
@@ -6575,32 +6607,35 @@ public class Client extends GameShell {
 			this.loadTitleBackground();
 			this.loadTitleImages();
 
-			@Pc(255) Jagfile config = this.loadArchive("config", this.archiveChecksum[2], "config", 15);
-			@Pc(266) Jagfile inter = this.loadArchive("interface", this.archiveChecksum[3], "interface", 20);
-			@Pc(277) Jagfile media = this.loadArchive("media", this.archiveChecksum[4], "2d graphics", 30);
-			@Pc(288) Jagfile models = this.loadArchive("models", this.archiveChecksum[5], "3d graphics", 40);
-			@Pc(299) Jagfile textures = this.loadArchive("textures", this.archiveChecksum[6], "textures", 60);
-			@Pc(310) Jagfile wordenc = this.loadArchive("wordenc", this.archiveChecksum[7], "chat system", 65);
-			@Pc(321) Jagfile sounds = this.loadArchive("sounds", this.archiveChecksum[8], "sound effects", 70);
+			Jagfile config = this.loadArchive("config", this.archiveChecksum[2], "config", 15);
+			Jagfile inter = this.loadArchive("interface", this.archiveChecksum[3], "interface", 20);
+			Jagfile media = this.loadArchive("media", this.archiveChecksum[4], "2d graphics", 30);
+			Jagfile models = this.loadArchive("models", this.archiveChecksum[5], "3d graphics", 40);
+			Jagfile textures = this.loadArchive("textures", this.archiveChecksum[6], "textures", 60);
+			Jagfile wordenc = this.loadArchive("wordenc", this.archiveChecksum[7], "chat system", 65);
+			Jagfile sounds = this.loadArchive("sounds", this.archiveChecksum[8], "sound effects", 70);
 
 			this.levelTileFlags = new byte[4][104][104];
 			this.levelHeightmap = new int[4][105][105];
 			this.scene = new World3D(this.levelHeightmap, 104, 4, 104);
-			for (@Pc(346) int level = 0; level < 4; level++) {
+			for (int level = 0; level < 4; level++) {
 				this.levelCollisionMap[level] = new CollisionMap(104, 104);
 			}
 			this.imageMinimap = new Pix24(512, 512);
 			this.drawProgress("Unpacking media", 75);
-			this.imageInvback = new Pix8(media, "invback", 0);
-			this.imageChatback = new Pix8(media, "chatback", 0);
-			this.imageMapback = new Pix8(media, "mapback", 0);
-			this.imageBackbase1 = new Pix8(media, "backbase1", 0);
-			this.imageBackbase2 = new Pix8(media, "backbase2", 0);
-			this.imageBackhmid1 = new Pix8(media, "backhmid1", 0);
-			for (@Pc(424) int i = 0; i < 13; i++) {
-				this.imageSideicons[i] = new Pix8(media, "sideicons", i);
+
+			// Custom Sprite Loading
+			this.imageInvback = loadCustomOrDefaultPix8(media, "invback", 0);
+			this.imageChatback = loadCustomOrDefaultPix8(media, "chatback", 0);
+			this.imageMapback = loadCustomOrDefaultPix8(media, "mapback", 0);
+			this.imageBackbase1 = loadCustomOrDefaultPix8(media, "backbase1", 0);
+			this.imageBackbase2 = loadCustomOrDefaultPix8(media, "backbase2", 0);
+			this.imageBackhmid1 = loadCustomOrDefaultPix8(media, "backhmid1", 0);
+
+			for (int i = 0; i < 13; i++) {
+				this.imageSideicons[i] = loadCustomOrDefaultPix8(media, "sideicons", i);
 			}
-			this.imageCompass = new Pix24(media, "compass", 0);
+			this.imageCompass = loadCustomOrDefaultPix24(media, "compass", 0);
 
 			try {
 				for (int i = 0; i < 50; i++) {
@@ -6608,94 +6643,96 @@ public class Client extends GameShell {
 						// weird debug sprite along water
 						continue;
 					}
-
-					this.imageMapscene[i] = new Pix8(media, "mapscene", i);
+					this.imageMapscene[i] = loadCustomOrDefaultPix8(media, "mapscene", i);
 				}
-			} catch (@Pc(468) Exception ex) {
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
+
 			try {
 				for (int i = 0; i < 50; i++) {
-					this.imageMapfunction[i] = new Pix24(media, "mapfunction", i);
+					this.imageMapfunction[i] = loadCustomOrDefaultPix24(media, "mapfunction", i);
 				}
 			} catch (@Pc(488) Exception ex) {
 			}
 			try {
 				for (int i = 0; i < 20; i++) {
-					this.imageHitmarks[i] = new Pix24(media, "hitmarks", i);
+					this.imageHitmarks[i] = loadCustomOrDefaultPix24(media, "hitmarks", i);
 				}
 			} catch (@Pc(508) Exception ex) {
 			}
 			try {
 				for (int i = 0; i < 20; i++) {
-					this.imageHeadicons[i] = new Pix24(media, "headicons", i);
+					this.imageHeadicons[i] = loadCustomOrDefaultPix24(media, "headicons", i);
 				}
 			} catch (@Pc(528) Exception ex) {
 			}
-			this.imageMapflag = new Pix24(media, "mapflag", 0);
+
+			this.imageMapflag = loadCustomOrDefaultPix24(media, "mapflag", 0);
 			for (int i = 0; i < 8; i++) {
-				this.imageCrosses[i] = new Pix24(media, "cross", i);
+				this.imageCrosses[i] = loadCustomOrDefaultPix24(media, "cross", i);
 			}
-			this.imageMapdot0 = new Pix24(media, "mapdots", 0);
-			this.imageMapdot1 = new Pix24(media, "mapdots", 1);
-			this.imageMapdot2 = new Pix24(media, "mapdots", 2);
-			this.imageMapdot3 = new Pix24(media, "mapdots", 3);
-			this.imageScrollbar0 = new Pix8(media, "scrollbar", 0);
-			this.imageScrollbar1 = new Pix8(media, "scrollbar", 1);
-			this.imageRedstone1 = new Pix8(media, "redstone1", 0);
-			this.imageRedstone2 = new Pix8(media, "redstone2", 0);
-			this.imageRedstone3 = new Pix8(media, "redstone3", 0);
-			this.imageRedstone1h = new Pix8(media, "redstone1", 0);
+			this.imageMapdot0 = loadCustomOrDefaultPix24(media, "mapdots", 0);
+			this.imageMapdot1 = loadCustomOrDefaultPix24(media, "mapdots", 1);
+			this.imageMapdot2 = loadCustomOrDefaultPix24(media, "mapdots", 2);
+			this.imageMapdot3 = loadCustomOrDefaultPix24(media, "mapdots", 3);
+			this.imageScrollbar0 = loadCustomOrDefaultPix8(media, "scrollbar", 0);
+			this.imageScrollbar1 = loadCustomOrDefaultPix8(media, "scrollbar", 1);
+			this.imageRedstone1 = loadCustomOrDefaultPix8(media, "redstone1", 0);
+			this.imageRedstone2 = loadCustomOrDefaultPix8(media, "redstone2", 0);
+			this.imageRedstone3 = loadCustomOrDefaultPix8(media, "redstone3", 0);
+			this.imageRedstone1h = loadCustomOrDefaultPix8(media, "redstone1", 0);
 			this.imageRedstone1h.flipHorizontally();
-			this.imageRedstone2h = new Pix8(media, "redstone2", 0);
+			this.imageRedstone2h = loadCustomOrDefaultPix8(media, "redstone2", 0);
 			this.imageRedstone2h.flipHorizontally();
-			this.imageRedstone1v = new Pix8(media, "redstone1", 0);
+			this.imageRedstone1v = loadCustomOrDefaultPix8(media, "redstone1", 0);
 			this.imageRedstone1v.flipVertically();
-			this.imageRedstone2v = new Pix8(media, "redstone2", 0);
+			this.imageRedstone2v = loadCustomOrDefaultPix8(media, "redstone2", 0);
 			this.imageRedstone2v.flipVertically();
-			this.imageRedstone3v = new Pix8(media, "redstone3", 0);
+			this.imageRedstone3v = loadCustomOrDefaultPix8(media, "redstone3", 0);
 			this.imageRedstone3v.flipVertically();
-			this.imageRedstone1hv = new Pix8(media, "redstone1", 0);
+			this.imageRedstone1hv = loadCustomOrDefaultPix8(media, "redstone1", 0);
 			this.imageRedstone1hv.flipHorizontally();
 			this.imageRedstone1hv.flipVertically();
-			this.imageRedstone2hv = new Pix8(media, "redstone2", 0);
+			this.imageRedstone2hv = loadCustomOrDefaultPix8(media, "redstone2", 0);
 			this.imageRedstone2hv.flipHorizontally();
 			this.imageRedstone2hv.flipVertically();
-			@Pc(725) Pix24 backleft1 = new Pix24(media, "backleft1", 0);
+			Pix24 backleft1 = loadCustomOrDefaultPix24(media, "backleft1", 0);
 			this.areaBackleft1 = new PixMap(this.getBaseComponent(), backleft1.width, backleft1.height);
 			backleft1.blitOpaque(0, 0);
-			@Pc(750) Pix24 backleft2 = new Pix24(media, "backleft2", 0);
+			Pix24 backleft2 = loadCustomOrDefaultPix24(media, "backleft2", 0);
 			this.areaBackleft2 = new PixMap(this.getBaseComponent(), backleft2.width, backleft2.height);
 			backleft2.blitOpaque(0, 0);
-			@Pc(775) Pix24 backright1 = new Pix24(media, "backright1", 0);
+			Pix24 backright1 = loadCustomOrDefaultPix24(media, "backright1", 0);
 			this.areaBackright1 = new PixMap(this.getBaseComponent(), backright1.width, backright1.height);
 			backright1.blitOpaque(0, 0);
-			@Pc(800) Pix24 backright2 = new Pix24(media, "backright2", 0);
+			Pix24 backright2 = loadCustomOrDefaultPix24(media, "backright2", 0);
 			this.areaBackright2 = new PixMap(this.getBaseComponent(), backright2.width, backright2.height);
 			backright2.blitOpaque(0, 0);
-			@Pc(825) Pix24 backtop1 = new Pix24(media, "backtop1", 0);
+			Pix24 backtop1 = loadCustomOrDefaultPix24(media, "backtop1", 0);
 			this.areaBacktop1 = new PixMap(this.getBaseComponent(), backtop1.width, backtop1.height);
 			backtop1.blitOpaque(0, 0);
-			@Pc(850) Pix24 backtop2 = new Pix24(media, "backtop2", 0);
+			Pix24 backtop2 = loadCustomOrDefaultPix24(media, "backtop2", 0);
 			this.areaBacktop2 = new PixMap(this.getBaseComponent(), backtop2.width, backtop2.height);
 			backtop2.blitOpaque(0, 0);
-			@Pc(875) Pix24 backvmid1 = new Pix24(media, "backvmid1", 0);
+			Pix24 backvmid1 = loadCustomOrDefaultPix24(media, "backvmid1", 0);
 			this.areaBackvmid1 = new PixMap(this.getBaseComponent(), backvmid1.width, backvmid1.height);
 			backvmid1.blitOpaque(0, 0);
-			@Pc(900) Pix24 backvmid2 = new Pix24(media, "backvmid2", 0);
+			Pix24 backvmid2 = loadCustomOrDefaultPix24(media, "backvmid2", 0);
 			this.areaBackvmid2 = new PixMap(this.getBaseComponent(), backvmid2.width, backvmid2.height);
 			backvmid2.blitOpaque(0, 0);
-			@Pc(925) Pix24 backvmid3 = new Pix24(media, "backvmid3", 0);
+			Pix24 backvmid3 = loadCustomOrDefaultPix24(media, "backvmid3", 0);
 			this.areaBackvmid3 = new PixMap(this.getBaseComponent(), backvmid3.width, backvmid3.height);
 			backvmid3.blitOpaque(0, 0);
-			@Pc(950) Pix24 backhmid2 = new Pix24(media, "backhmid2", 0);
+			Pix24 backhmid2 = loadCustomOrDefaultPix24(media, "backhmid2", 0);
 			this.areaBackhmid2 = new PixMap(this.getBaseComponent(), backhmid2.width, backhmid2.height);
 			backhmid2.blitOpaque(0, 0);
 
-			@Pc(975) int randR = (int) (Math.random() * 21.0D) - 10;
-			@Pc(982) int randG = (int) (Math.random() * 21.0D) - 10;
-			@Pc(989) int randB = (int) (Math.random() * 21.0D) - 10;
-			@Pc(996) int rand = (int) (Math.random() * 41.0D) - 20;
-			for (@Pc(998) int i = 0; i < 50; i++) {
+			int randR = (int) (Math.random() * 21.0D) - 10;
+			int randG = (int) (Math.random() * 21.0D) - 10;
+			int randB = (int) (Math.random() * 21.0D) - 10;
+			int rand = (int) (Math.random() * 41.0D) - 20;
+			for (int i = 0; i < 50; i++) {
 				if (this.imageMapfunction[i] != null) {
 					this.imageMapfunction[i].translate(randR + rand, randG + rand, randB + rand);
 				}
@@ -6726,17 +6763,17 @@ public class Client extends GameShell {
 			ObjType.membersWorld = members;
 			if (!lowMemory) {
 				this.drawProgress("Unpacking sounds", 90);
-				@Pc(1113) byte[] data = sounds.read("sounds.dat", null);
-				@Pc(1119) Packet soundDat = new Packet(data);
+				byte[] data = sounds.read("sounds.dat", null);
+				Packet soundDat = new Packet(data);
 				Wave.unpack(soundDat);
 			}
 
 			this.drawProgress("Unpacking interfaces", 92);
-			@Pc(1150) PixFont[] fonts = new PixFont[] { this.fontPlain11, this.fontPlain12, this.fontBold12, this.fontQuill8 };
+			PixFont[] fonts = new PixFont[] { this.fontPlain11, this.fontPlain12, this.fontBold12, this.fontQuill8 };
 			Component.unpack(inter, media, fonts);
 
 			this.drawProgress("Preparing game engine", 97);
-			for (@Pc(1162) int y = 0; y < 33; y++) {
+			for (int y = 0; y < 33; y++) {
 				int left = 999;
 				int right = 0;
 				for (int x = 0; x < 35; x++) {
@@ -6774,23 +6811,24 @@ public class Client extends GameShell {
 			this.areaChatbackOffsets = Draw3D.lineOffset;
 			Draw3D.init3D(190, 261);
 			this.areaSidebarOffsets = Draw3D.lineOffset;
-			Draw3D.init3D(512, 334);
+			Draw3D.init3D(516, 337);
 			this.areaViewportOffsets = Draw3D.lineOffset;
 
-			@Pc(1312) int[] distance = new int[9];
+			int[] distance = new int[9];
 			for (int x = 0; x < 9; x++) {
 				int angle = x * 32 + 128 + 15;
-				@Pc(1330) int offset = angle * 3 + 600;
-				@Pc(1334) int sin = Draw3D.sin[angle];
+				int offset = angle * 3 + 600;
+				int sin = Draw3D.sin[angle];
 				distance[x] = offset * sin >> 16;
 			}
 
-			World3D.init(512, 334, 500, 800, distance);
-			//WordFilter.unpack(wordenc); TODO: Fix
-		} catch (@Pc(1357) Exception ex) {
+			World3D.init(516, 337, 500, 800, distance);
+			// WordFilter.unpack(wordenc); TODO: Fix
+		} catch (Exception ex) {
 			this.errorLoading = true;
 		}
 	}
+
 
 	@OriginalMember(owner = "client!client", name = "v", descriptor = "(I)V")
 	private void handleInput() {
@@ -6808,7 +6846,7 @@ public class Client extends GameShell {
 			if (this.viewportInterfaceId == -1) {
 				this.handleViewportOptions();
 			} else {
-				this.handleInterfaceInput(Component.instances[this.viewportInterfaceId], super.mouseX, super.mouseY, 8, 11, 0);
+				this.handleInterfaceInput(Component.instances[this.viewportInterfaceId], super.mouseX, super.mouseY, 5, 8, 0);
 			}
 		}
 
@@ -6956,40 +6994,40 @@ public class Client extends GameShell {
 			y += 13;
 		}
 
-        if (this.cameraEditor || this.showDebug) {
-            this.fontPlain11.drawStringRight(x, y, "Local Pos: " + this.localPlayer.x + ", " + this.localPlayer.z + ", " + this.localPlayer.y, 0xFFFF00, true);
-            y += 13;
+		if (this.cameraEditor || this.showDebug) {
+			this.fontPlain11.drawStringRight(x, y, "Local Pos: " + this.localPlayer.x + ", " + this.localPlayer.z + ", " + this.localPlayer.y, 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "Camera Pos: " + this.cameraX + ", " + this.cameraZ + ", " + this.cameraY, 0xFFFF00, true);
-            y += 13;
+			this.fontPlain11.drawStringRight(x, y, "Camera Pos: " + this.cameraX + ", " + this.cameraZ + ", " + this.cameraY, 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "Camera Angle: " + this.cameraYaw + ", " + this.cameraPitch, 0xFFFF00, true);
-            y += 13;
+			this.fontPlain11.drawStringRight(x, y, "Camera Angle: " + this.cameraYaw + ", " + this.cameraPitch, 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "Cutscene Source: " + this.cutsceneSrcLocalTileX + ", " + this.cutsceneSrcLocalTileZ + " " + this.cutsceneSrcHeight + "; " + this.cutsceneMoveSpeed + ", " + this.cutsceneMoveAcceleration, 0xFFFF00, true);
-            y += 13;
+			this.fontPlain11.drawStringRight(x, y, "Cutscene Source: " + this.cutsceneSrcLocalTileX + ", " + this.cutsceneSrcLocalTileZ + " " + this.cutsceneSrcHeight + "; " + this.cutsceneMoveSpeed + ", " + this.cutsceneMoveAcceleration, 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "Cutscene Destination: " + this.cutsceneDstLocalTileX + ", " + this.cutsceneDstLocalTileZ + " " + this.cutsceneDstHeight + "; " + this.cutsceneRotateSpeed + ", " + this.cutsceneRotateAcceleration, 0xFFFF00, true);
-            y += 13;
-        }
+			this.fontPlain11.drawStringRight(x, y, "Cutscene Destination: " + this.cutsceneDstLocalTileX + ", " + this.cutsceneDstLocalTileZ + " " + this.cutsceneDstHeight + "; " + this.cutsceneRotateSpeed + ", " + this.cutsceneRotateAcceleration, 0xFFFF00, true);
+			y += 13;
+		}
 
-        if (this.cameraEditor) {
-            y += 13;
-            this.fontPlain11.drawStringRight(x, y, "Instructions:", 0xFFFF00, true);
-            y += 13;
+		if (this.cameraEditor) {
+			y += 13;
+			this.fontPlain11.drawStringRight(x, y, "Instructions:", 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "- Arrows to move Camera", 0xFFFF00, true);
-            y += 13;
+			this.fontPlain11.drawStringRight(x, y, "- Arrows to move Camera", 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "- Shift to control Source or Dest", 0xFFFF00, true);
-            y += 13;
+			this.fontPlain11.drawStringRight(x, y, "- Shift to control Source or Dest", 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "- Alt to control Height", 0xFFFF00, true);
-            y += 13;
+			this.fontPlain11.drawStringRight(x, y, "- Alt to control Height", 0xFFFF00, true);
+			y += 13;
 
-            this.fontPlain11.drawStringRight(x, y, "- Ctrl to control Modifier", 0xFFFF00, true);
-            y += 13;
-        }
+			this.fontPlain11.drawStringRight(x, y, "- Ctrl to control Modifier", 0xFFFF00, true);
+			y += 13;
+		}
 	}
 
 	private void drawTileOverlay(int x, int z, int level, int size, int color, boolean crossed) {
@@ -7030,110 +7068,110 @@ public class Client extends GameShell {
 	}
 
 	private void updateCameraEditor() {
-        // holding ctrl
-        int modifier = super.actionKey[5] == 1 ? 2 : 1;
+		// holding ctrl
+		int modifier = super.actionKey[5] == 1 ? 2 : 1;
 
-        if (super.actionKey[6] == 1) {
-            // holding shift
-            if (super.actionKey[1] == 1) {
-                // left
-                this.cutsceneDstLocalTileX -= 1 * modifier;
-                if (this.cutsceneDstLocalTileX < 1) {
-                    this.cutsceneDstLocalTileX = 1;
-                }
-            } else if (super.actionKey[2] == 1) {
-                // right
-                this.cutsceneDstLocalTileX += 1 * modifier;
-                if (this.cutsceneDstLocalTileX > 102) {
-                    this.cutsceneDstLocalTileX = 102;
-                }
-            }
+		if (super.actionKey[6] == 1) {
+			// holding shift
+			if (super.actionKey[1] == 1) {
+				// left
+				this.cutsceneDstLocalTileX -= 1 * modifier;
+				if (this.cutsceneDstLocalTileX < 1) {
+					this.cutsceneDstLocalTileX = 1;
+				}
+			} else if (super.actionKey[2] == 1) {
+				// right
+				this.cutsceneDstLocalTileX += 1 * modifier;
+				if (this.cutsceneDstLocalTileX > 102) {
+					this.cutsceneDstLocalTileX = 102;
+				}
+			}
 
-            if (super.actionKey[3] == 1) {
-                // up
-                if (super.actionKey[7] == 1) {
-                    // holding alt
-                    this.cutsceneDstHeight += 2 * modifier;
-                } else {
-                    this.cutsceneDstLocalTileZ += 1;
-                    if (this.cutsceneDstLocalTileZ > 102) {
-                        this.cutsceneDstLocalTileZ = 102;
-                    }
-                }
-            } else if (super.actionKey[4] == 1) {
-                // down
-                if (super.actionKey[7] == 1) {
-                    // holding alt
-                    this.cutsceneDstHeight -= 2 * modifier;
-                } else {
-                    this.cutsceneDstLocalTileZ -= 1;
-                    if (this.cutsceneDstLocalTileZ < 1) {
-                        this.cutsceneDstLocalTileZ = 1;
-                    }
-                }
-            }
-        } else {
-            if (super.actionKey[1] == 1) {
-                // left
-                this.cutsceneSrcLocalTileX -= 1 * modifier;
-                if (this.cutsceneSrcLocalTileX < 1) {
-                    this.cutsceneSrcLocalTileX = 1;
-                }
-            } else if (super.actionKey[2] == 1) {
-                // right
-                this.cutsceneSrcLocalTileX += 1 * modifier;
-                if (this.cutsceneSrcLocalTileX > 102) {
-                    this.cutsceneSrcLocalTileX = 102;
-                }
-            }
+			if (super.actionKey[3] == 1) {
+				// up
+				if (super.actionKey[7] == 1) {
+					// holding alt
+					this.cutsceneDstHeight += 2 * modifier;
+				} else {
+					this.cutsceneDstLocalTileZ += 1;
+					if (this.cutsceneDstLocalTileZ > 102) {
+						this.cutsceneDstLocalTileZ = 102;
+					}
+				}
+			} else if (super.actionKey[4] == 1) {
+				// down
+				if (super.actionKey[7] == 1) {
+					// holding alt
+					this.cutsceneDstHeight -= 2 * modifier;
+				} else {
+					this.cutsceneDstLocalTileZ -= 1;
+					if (this.cutsceneDstLocalTileZ < 1) {
+						this.cutsceneDstLocalTileZ = 1;
+					}
+				}
+			}
+		} else {
+			if (super.actionKey[1] == 1) {
+				// left
+				this.cutsceneSrcLocalTileX -= 1 * modifier;
+				if (this.cutsceneSrcLocalTileX < 1) {
+					this.cutsceneSrcLocalTileX = 1;
+				}
+			} else if (super.actionKey[2] == 1) {
+				// right
+				this.cutsceneSrcLocalTileX += 1 * modifier;
+				if (this.cutsceneSrcLocalTileX > 102) {
+					this.cutsceneSrcLocalTileX = 102;
+				}
+			}
 
-            if (super.actionKey[3] == 1) {
-                // up
-                if (super.actionKey[7] == 1) {
-                    // holding alt
-                    this.cutsceneSrcHeight += 2 * modifier;
-                } else {
-                    this.cutsceneSrcLocalTileZ += 1 * modifier;
-                    if (this.cutsceneSrcLocalTileZ > 102) {
-                        this.cutsceneSrcLocalTileZ = 102;
-                    }
-                }
-            } else if (super.actionKey[4] == 1) {
-                // down
-                if (super.actionKey[7] == 1) {
-                    // holding alt
-                    this.cutsceneSrcHeight -= 2 * modifier;
-                } else {
-                    this.cutsceneSrcLocalTileZ -= 1 * modifier;
-                    if (this.cutsceneSrcLocalTileZ < 1) {
-                        this.cutsceneSrcLocalTileZ = 1;
-                    }
-                }
-            }
-        }
+			if (super.actionKey[3] == 1) {
+				// up
+				if (super.actionKey[7] == 1) {
+					// holding alt
+					this.cutsceneSrcHeight += 2 * modifier;
+				} else {
+					this.cutsceneSrcLocalTileZ += 1 * modifier;
+					if (this.cutsceneSrcLocalTileZ > 102) {
+						this.cutsceneSrcLocalTileZ = 102;
+					}
+				}
+			} else if (super.actionKey[4] == 1) {
+				// down
+				if (super.actionKey[7] == 1) {
+					// holding alt
+					this.cutsceneSrcHeight -= 2 * modifier;
+				} else {
+					this.cutsceneSrcLocalTileZ -= 1 * modifier;
+					if (this.cutsceneSrcLocalTileZ < 1) {
+						this.cutsceneSrcLocalTileZ = 1;
+					}
+				}
+			}
+		}
 
-        this.cameraX = this.cutsceneSrcLocalTileX * 128 + 64;
-        this.cameraZ = this.cutsceneSrcLocalTileZ * 128 + 64;
-        this.cameraY = this.getHeightmapY(this.currentLevel, this.cutsceneSrcLocalTileX, this.cutsceneSrcLocalTileZ) - this.cutsceneSrcHeight;
+		this.cameraX = this.cutsceneSrcLocalTileX * 128 + 64;
+		this.cameraZ = this.cutsceneSrcLocalTileZ * 128 + 64;
+		this.cameraY = this.getHeightmapY(this.currentLevel, this.cutsceneSrcLocalTileX, this.cutsceneSrcLocalTileZ) - this.cutsceneSrcHeight;
 
-        int sceneX = this.cutsceneDstLocalTileX * 128 + 64;
-        int sceneZ = this.cutsceneDstLocalTileZ * 128 + 64;
-        int sceneY = this.getHeightmapY(this.currentLevel, this.cutsceneDstLocalTileX, this.cutsceneDstLocalTileZ) - this.cutsceneDstHeight;
-        int deltaX = sceneX - this.cameraX;
-        int deltaY = sceneY - this.cameraY;
-        int deltaZ = sceneZ - this.cameraZ;
-        int distance = (int) Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+		int sceneX = this.cutsceneDstLocalTileX * 128 + 64;
+		int sceneZ = this.cutsceneDstLocalTileZ * 128 + 64;
+		int sceneY = this.getHeightmapY(this.currentLevel, this.cutsceneDstLocalTileX, this.cutsceneDstLocalTileZ) - this.cutsceneDstHeight;
+		int deltaX = sceneX - this.cameraX;
+		int deltaY = sceneY - this.cameraY;
+		int deltaZ = sceneZ - this.cameraZ;
+		int distance = (int) Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
 
-        this.cameraPitch = (int) (Math.atan2(deltaY, distance) * 325.949D) & 0x7FF;
-        this.cameraYaw = (int) (Math.atan2(deltaX, deltaZ) * -325.949D) & 0x7FF;
-        if (this.cameraPitch < 128) {
-            this.cameraPitch = 128;
-        }
+		this.cameraPitch = (int) (Math.atan2(deltaY, distance) * 325.949D) & 0x7FF;
+		this.cameraYaw = (int) (Math.atan2(deltaX, deltaZ) * -325.949D) & 0x7FF;
+		if (this.cameraPitch < 128) {
+			this.cameraPitch = 128;
+		}
 
-        if (this.cameraPitch > 383) {
-            this.cameraPitch = 383;
-        }
-    }
+		if (this.cameraPitch > 383) {
+			this.cameraPitch = 383;
+		}
+	}
 
 	@OriginalMember(owner = "client!client", name = "x", descriptor = "(I)V")
 	private void updateOrbitCamera() {
@@ -7396,8 +7434,8 @@ public class Client extends GameShell {
 			}
 
 			y = super.mouseClickY - 11;
-			if (y + height > 334) {
-				y = 334 - height;
+			if (y + height > 337) {
+				y = 337 - height;
 			} else if (y < 0) {
 				y = 0;
 			}
@@ -8349,11 +8387,11 @@ public class Client extends GameShell {
 			}
 
 			if (this.sceneState == 2) {
-                if (this.cameraEditor) {
-                    this.updateCameraEditor();
-                } else {
-    				this.updateOrbitCamera();
-                }
+				if (this.cameraEditor) {
+					this.updateCameraEditor();
+				} else {
+					this.updateOrbitCamera();
+				}
 			}
 			if (this.sceneState == 2 && this.cutscene) {
 				this.applyCutscene();
@@ -8501,12 +8539,12 @@ public class Client extends GameShell {
 	@OriginalMember(owner = "client!client", name = "getCodeBase", descriptor = "()Ljava/net/URL;")
 	@Override
 	public URL getCodeBase() {
-        try {
-            return new URL(Configuration.URL);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		try {
+			return new URL(Configuration.URL);
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@OriginalMember(owner = "client!client", name = "a", descriptor = "(IIZIIIIIIIII)Z")
 	private boolean tryMove(@OriginalArg(0) int srcX, @OriginalArg(4) int srcZ, @OriginalArg(3) int dx, @OriginalArg(8) int dz, @OriginalArg(6) int type, @OriginalArg(1) int locWidth, @OriginalArg(7) int locLength, @OriginalArg(9) int locRotation, @OriginalArg(10) int locShape, @OriginalArg(11) int forceapproach, @OriginalArg(2) boolean tryNearest) {
@@ -9224,7 +9262,7 @@ public class Client extends GameShell {
 			this.redrawSidebar = true;
 			this.selectedTab = 6;
 			this.redrawSideicons = true;
-		} else if (super.mouseClickX >= 550 && super.mouseClickX <= 584 && super.mouseClickY >= 492 && super.mouseClickY < 528 && this.tabInterfaceId[7] != -1) {
+		} else if (super.mouseClickX >= 546 && super.mouseClickX <= 578 && super.mouseClickY >= 488 && super.mouseClickY < 523 && this.tabInterfaceId[7] != -1) {
 			this.redrawSidebar = true;
 			this.selectedTab = 7;
 			this.redrawSideicons = true;
@@ -9374,7 +9412,7 @@ public class Client extends GameShell {
 			this.fontPlain12.drawStringCenter(256, 143, "Connection lost", 16777215);
 			this.fontPlain12.drawStringCenter(257, 159, "Please wait - attempting to reestablish", 0);
 			this.fontPlain12.drawStringCenter(256, 158, "Please wait - attempting to reestablish", 16777215);
-			this.areaViewport.draw(super.graphics, 8, 11);
+			this.areaViewport.draw(super.graphics, 5, 8);
 			this.flagSceneTileX = 0;
 			@Pc(60) ClientStream stream = this.stream;
 			this.ingame = false;
@@ -10553,7 +10591,7 @@ public class Client extends GameShell {
 				this.areaViewport.bind();
 				this.fontPlain12.drawStringCenter(257, 151, "Loading - please wait.", 0);
 				this.fontPlain12.drawStringCenter(256, 150, "Loading - please wait.", 16777215);
-				this.areaViewport.draw(super.graphics, 8, 11);
+				this.areaViewport.draw(super.graphics, 5, 8);
 				signlink.looprate(5);
 				int regions = (this.packetSize - 2) / 10;
 				this.sceneMapLandData = new byte[regions][];
@@ -10616,7 +10654,7 @@ public class Client extends GameShell {
 					this.fontPlain12.drawStringCenter(257, 166, "Map area updated since last visit, so load will take longer this time only", 0);
 					this.fontPlain12.drawStringCenter(256, 165, "Map area updated since last visit, so load will take longer this time only", 16777215);
 				}
-				this.areaViewport.draw(super.graphics, 8, 11);
+				this.areaViewport.draw(super.graphics, 5, 8);
 				int dx = this.sceneBaseTileX - this.mapLastBaseX;
 				int dz = this.sceneBaseTileZ - this.mapLastBaseZ;
 				this.mapLastBaseX = this.sceneBaseTileX;
@@ -10870,7 +10908,7 @@ public class Client extends GameShell {
 				// FINISH_TRACKING
 				@Pc(1701) Packet tracking = InputTracking.stop();
 				if (tracking != null) {
-                    // EVENT_TRACKING
+					// EVENT_TRACKING
 					this.out.p1isaac(81);
 					this.out.p2(tracking.pos);
 					this.out.pdata(tracking.data, tracking.pos, 0);
@@ -11491,7 +11529,7 @@ public class Client extends GameShell {
 					this.areaViewport.bind();
 					this.fontPlain12.drawStringCenter(257, 151, "Loading - please wait.", 0);
 					this.fontPlain12.drawStringCenter(256, 150, "Loading - please wait.", 16777215);
-					this.areaViewport.draw(super.graphics, 8, 11);
+					this.areaViewport.draw(super.graphics, 5, 8);
 					World.levelBuilt = this.currentLevel;
 					this.buildScene();
 				}
@@ -11721,6 +11759,34 @@ public class Client extends GameShell {
 				this.imageTitle7.draw(super.graphics, 128, 186);
 				this.imageTitle8.draw(super.graphics, 574, 186);
 			}
+		}
+	}
+
+	private Pix8 loadCustomOrDefaultPix8(Jagfile media, String spriteName, int index) {
+		Pix8 customSprite = loadCustomPix8(spriteName, index);
+		return customSprite != null ? customSprite : new Pix8(media, spriteName, index);
+	}
+
+	private Pix24 loadCustomOrDefaultPix24(Jagfile media, String spriteName, int index) {
+		Pix24 customSprite = loadCustomPix24(spriteName, index);
+		return customSprite != null ? customSprite : new Pix24(media, spriteName, index);
+	}
+
+	private Pix8 loadCustomPix8(String spriteName, int index) {
+		try {
+			byte[] customSpriteData = Files.readAllBytes(Paths.get("custom_sprites/" + spriteName + "_" + index + ".png"));
+			return new Pix8(customSpriteData);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	private Pix24 loadCustomPix24(String spriteName, int index) {
+		try {
+			byte[] customSpriteData = Files.readAllBytes(Paths.get("custom_sprites/" + spriteName + "_" + index + ".png"));
+			return new Pix24(customSpriteData);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }

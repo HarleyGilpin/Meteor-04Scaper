@@ -7,6 +7,13 @@ import org.openrs2.deob.annotation.OriginalClass;
 import org.openrs2.deob.annotation.OriginalMember;
 import org.openrs2.deob.annotation.Pc;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 // name and packaging confirmed 100% in rs2/mapview applet strings
 @OriginalClass("client!ib")
 public class Pix8 extends Draw2D {
@@ -15,7 +22,7 @@ public class Pix8 extends Draw2D {
 	public byte[] pixels;
 
 	@OriginalMember(owner = "client!ib", name = "A", descriptor = "[I")
-	public final int[] palette;
+	public int[] palette;
 
 	@OriginalMember(owner = "client!ib", name = "B", descriptor = "I")
 	public int width;
@@ -75,6 +82,53 @@ public class Pix8 extends Draw2D {
 					this.pixels[x + y * this.width] = dat.g1b();
 				}
 			}
+		}
+	}
+
+	public Pix8(byte[] imageData) {
+		try {
+			BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
+			if (image == null) {
+				throw new IOException("Failed to read image");
+			}
+			this.width = image.getWidth();
+			this.height = image.getHeight();
+			this.cropW = this.width;
+			this.cropH = this.height;
+			this.cropX = 0;
+			this.cropY = 0;
+			this.pixels = new byte[this.width * this.height];
+
+			// Extract the image colors and build the palette
+			int[] intPixels = new int[this.width * this.height];
+			image.getRGB(0, 0, this.width, this.height, intPixels, 0, this.width);
+
+			Map<Integer, Integer> colorMap = new HashMap<>();
+			int paletteIndex = 1;
+
+			for (int i = 0; i < intPixels.length; i++) {
+				int rgba = intPixels[i];
+				if ((rgba >> 24) == 0x00) {
+					// Transparent pixel
+					this.pixels[i] = 0;
+				} else {
+					if (!colorMap.containsKey(rgba)) {
+						colorMap.put(rgba, paletteIndex++);
+					}
+					if (paletteIndex > 256) {
+						throw new IOException("Palette overflow: too many colors");
+					}
+					this.pixels[i] = colorMap.get(rgba).byteValue();
+				}
+			}
+
+			this.palette = new int[paletteIndex];
+			for (Map.Entry<Integer, Integer> entry : colorMap.entrySet()) {
+				this.palette[entry.getValue()] = entry.getKey();
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error loading PNG: " + e);
 		}
 	}
 

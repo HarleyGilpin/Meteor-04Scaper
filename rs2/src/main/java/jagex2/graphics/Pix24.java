@@ -7,8 +7,13 @@ import org.openrs2.deob.annotation.OriginalClass;
 import org.openrs2.deob.annotation.OriginalMember;
 import org.openrs2.deob.annotation.Pc;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 // name derived from Pix8
 @OriginalClass("client!hb")
@@ -61,6 +66,37 @@ public class Pix24 extends Draw2D {
 			grabber.grabPixels();
 		} catch (@Pc(81) Exception ignored) {
 			System.out.println("Error converting jpg");
+		}
+	}
+
+	public Pix24(byte[] imageData) {
+		try {
+			BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageData));
+			if (image == null) {
+				throw new IOException("Failed to read image");
+			}
+			this.width = image.getWidth();
+			this.height = image.getHeight();
+			this.cropW = this.width;
+			this.cropH = this.height;
+			this.cropX = 0;
+			this.cropY = 0;
+			this.pixels = new int[this.width * this.height];
+
+			int[] intPixels = new int[this.width * this.height];
+			image.getRGB(0, 0, this.width, this.height, intPixels, 0, this.width);
+
+			for (int i = 0; i < intPixels.length; i++) {
+				int rgba = intPixels[i];
+				int alpha = (rgba >> 24) & 0xFF;
+				if (alpha == 0) {
+					this.pixels[i] = 0; // Transparent pixel
+				} else {
+					this.pixels[i] = rgba; // Preserve original pixel including alpha
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Error loading PNG: " + e);
 		}
 	}
 
